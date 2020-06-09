@@ -1,5 +1,5 @@
 {
-  "name": "@uploy/wxml",
+  "name": "wxml",
   "version": "2.0.0",
   "description": "🌇WXML parser and serializer.",
   "keywords": [
