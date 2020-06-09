@@ -1,0 +1,4 @@
+{
+  "conventionalCommits.scopes": ["parse", "project", "serialize", "index"],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

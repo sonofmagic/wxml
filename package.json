@@ -29,8 +29,9 @@
     "build": "tsc",
     "test": "jest",
     "coverage": "jest --collect-coverage",
-    "release:beta": "npm run coverage && standard-version --prerelease beta && npm publish --tag beta && git push --follow-tags",
-    "release": "npm run coverage && standard-version && npm publish && git push --follow-tags"
+    "release:beta": "npm run build && npm run coverage && standard-version --prerelease beta && npm publish --tag beta && git push --follow-tags",
+    "release": "npm run build && npm run coverage && standard-version && npm publish && git push --follow-tags",
+    "postinstall":"npm run build"
   },
   "repository": {
     "type": "git",
@@ -43,16 +44,16 @@
   },
   "homepage": "https://github.com/vivaxy/WXML#readme",
   "devDependencies": {
-    "@types/fs-extra": "^8.0.1",
-    "@types/jest": "^24.9.0",
-    "fs-extra": "^8.1.0",
-    "husky": "^3.0.3",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.2.1",
-    "prettier": "^1.18.2",
-    "standard-version": "^7.0.0",
-    "ts-jest": "^24.3.0",
-    "typescript": "^3.7.5"
+    "@types/fs-extra": "^9.0.0",
+    "@types/jest": "^25.0.0",
+    "fs-extra": "^9.0.0",
+    "husky": "^4.0.0",
+    "jest": "^26.0.1",
+    "lint-staged": "^10.0.0",
+    "prettier": "^2.0.0",
+    "standard-version": "^8.0.0",
+    "ts-jest": "^26.0.0",
+    "typescript": "^3.9.2"
   },
   "lint-staged": {
     "**/**.{js,json,md}": [
