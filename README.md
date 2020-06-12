@@ -1,6 +1,6 @@
 # WXML
 
-🌇WXML parser and serializer.
+wxml parser and serializer.
 
 [![Build Status][travis-image]][travis-url]
 [![NPM Version][npm-version-image]][npm-url]
@@ -11,12 +11,12 @@
 
 # Install
 
-`yarn add @vivaxy/wxml` or `npm i @vivaxy/wxml --save`
+`yarn add wxml` or `npm i wxml --save`
 
 # Usage
 
 ```js
-import * as wxml from '@vivaxy/wxml';
+import * as wxml from 'wxml';
 const parsed = wxml.parse('<view></view>');
 wxml.traverse(parsed, function visitor(node, parent) {
   const type = node.type;
