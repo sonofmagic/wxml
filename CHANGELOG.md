@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/oft/wxml/compare/v2.0.0...v2.2.0) (2020-06-19)
+
+
+### Features
+
+* **index:** :sparkles: exports NODE_TYPES enum ([98b4805](https://github.com/oft/wxml/commit/98b4805f79bc1bb2871951a7ab3939f020da9466))
+
+
+### Bug Fixes
+
+* **parse:** :bug: Fix `Unexpected node` error ([4bb1217](https://github.com/oft/wxml/commit/4bb121744841d341dedd53b55980df7064f16572))
+* **project:** :bug: fix typings ([8b13436](https://github.com/oft/wxml/commit/8b13436dd1dbffd1153e7eb13c859b4bed576a2f))
+* **serialize:** :bug: fix the wrong result when serializing double quotes in attributes ([cc29f0f](https://github.com/oft/wxml/commit/cc29f0f5da234530ee10ed073fa6036624e603df))
+
 ## [2.1.0](https://github.com/vivaxy/WXML/compare/v2.0.3...v2.1.0) (2020-05-20)
 
 

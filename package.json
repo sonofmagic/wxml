@@ -1,6 +1,6 @@
 {
   "name": "wxml",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "wxml parser and serializer.",
   "keywords": [
     "wxml",
@@ -24,8 +24,7 @@
     "test": "jest",
     "coverage": "jest --collect-coverage",
     "release:beta": "npm run build && npm run coverage && standard-version --prerelease beta && npm publish --tag beta && git push --follow-tags",
-    "release": "npm run build && npm run coverage && standard-version && npm publish && git push --follow-tags",
-    "postinstall": "npm run build"
+    "release": "npm run build && npm run coverage && standard-version && npm publish && git push --follow-tags"
   },
   "repository": {
     "type": "git",
