@@ -1,21 +1,15 @@
 {
   "name": "wxml",
-  "version": "2.0.0",
-  "description": "🌇WXML parser and serializer.",
+  "version": "2.1.0",
+  "description": "wxml parser and serializer.",
   "keywords": [
     "wxml",
-    "vivaxy",
     "wxml-parser",
     "wxml-serializer",
-    "wxml-traverser",
-    "wxml-stringifier",
     "parse-wxml",
     "serialize-wxml",
     "traverse-wxml",
     "stringify-wxml",
-    "weixin",
-    "mp",
-    "wxmp",
     "miniprogram",
     "parse",
     "traverse",
@@ -35,14 +29,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uploy/wxml.git"
+    "url": "git+https://github.com/oft/wxml.git"
   },
   "author": "roadup <roadup.inbox@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/uploy/wxml/issues"
+    "url": "https://github.com/oft/wxml/issues"
   },
-  "homepage": "https://github.com/uploy/wxml#readme",
+  "homepage": "https://github.com/oft/wxml#readme",
   "devDependencies": {
     "@types/fs-extra": "^9.0.0",
     "@types/jest": "^25.0.0",

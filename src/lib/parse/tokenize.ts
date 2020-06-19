@@ -47,29 +47,30 @@ export default function tokenize(input: string, traverse: Traverse) {
     // end of mustache
   }
   enum ACTIONS {
-    SPACE,
-    LT,
-    GT,
-    QUOTE,
-    EQUAL,
-    SLASH,
-    EXCLAMATION,
-    QUESTION,
-    CHAR,
-    MINUS,
-    BACK_SLASH,
+    SPACE = "ACTIONS(SPACE)",
+    LT = "ACTIONS(LT)",
+    GT = "ACTIONS(GT)",
+    DOUBLE_QUOTE = "ACTIONS(DOUBLE_QUOTE)",
+    SINGLE_QUOTE = "ACTIONS(SINGLE_QUOTE)",
+    EQUAL = "ACTIONS(EQUAL)",
+    SLASH = "ACTIONS(SLASH)",
+    EXCLAMATION = "ACTIONS(EXCLAMATION)",
+    QUESTION = "ACTIONS(QUESTION)",
+    CHAR = "ACTIONS(CHAR)",
+    MINUS = "ACTIONS(MINUS)",
+    BACK_SLASH = "ACTIONS(BACK_SLASH)",
     // start of mustache
-    BRACE_LEFT,
-    BRACE_RIGHT,
+    BRACE_LEFT = "ACTIONS(BRACE_LEFT)",
+    BRACE_RIGHT = "ACTIONS(BRACE_RIGHT)",
     // end of mustache
   }
   enum STATES {
-    TEXT,
-    TAG_OPEN,
-    TAG_NAME,
-    ATTRIBUTE_NAME,
-    ATTRIBUTE_VALUE,
-    COMMENT,
+    TEXT = "STATE(TEXT)",
+    TAG_OPEN = "STATE(TAG_OPEN)",
+    TAG_NAME = "STATE(TAG_NAME)",
+    ATTRIBUTE_NAME = "STATE(ATTRIBUTE_NAME)",
+    ATTRIBUTE_VALUE = "STATE(ATTRIBUTE_VALUE)",
+    COMMENT = "STATE(COMMENT)",
   }
   const CHAR_TO_ACTIONS = {
     [CHAR.SPACE]: ACTIONS.SPACE,
@@ -78,8 +79,8 @@ export default function tokenize(input: string, traverse: Traverse) {
     [CHAR.CARRIAGE_RETURN]: ACTIONS.SPACE,
     [CHAR.LT]: ACTIONS.LT,
     [CHAR.GT]: ACTIONS.GT,
-    [CHAR.DOUBLE_QUOTE]: ACTIONS.QUOTE,
-    [CHAR.SINGLE_QUOTE]: ACTIONS.QUOTE,
+    [CHAR.DOUBLE_QUOTE]: ACTIONS.DOUBLE_QUOTE,
+    [CHAR.SINGLE_QUOTE]: ACTIONS.SINGLE_QUOTE,
     [CHAR.EQUAL]: ACTIONS.EQUAL,
     [CHAR.SLASH]: ACTIONS.SLASH,
     [CHAR.EXCLAMATION]: ACTIONS.EXCLAMATION,
@@ -98,22 +99,24 @@ export default function tokenize(input: string, traverse: Traverse) {
   let closing: boolean = true;
   let quote: string = '';
   let i: number = 0;
+  let line: number = 1
+  let column: number = 1
   // start of mustache
   let mustache: boolean = false;
   // end of mustache
 
-  function NOOP() {}
+  function NOOP() { }
 
   function createUnexpected(state: string, action: string) {
     return function unexpected(char: string) {
       throw new Error(
         'Unexpected char `' +
-          char +
-          '` in state `' +
-          state +
-          '` with action `' +
-          action +
-          '`'
+        char +
+        '` in state `' +
+        state +
+        '` with action `' +
+        action +
+        '`' + "line:" + line + ",column:" + column
       );
     };
   }
@@ -177,7 +180,8 @@ export default function tokenize(input: string, traverse: Traverse) {
       [ACTIONS.SPACE]: NOOP,
       [ACTIONS.LT]: createUnexpected('TAG_OPEN', 'LT'),
       [ACTIONS.GT]: createUnexpected('TAG_OPEN', 'GT'),
-      [ACTIONS.QUOTE]: createUnexpected('TAG_OPEN', 'QUOTE'),
+      [ACTIONS.SINGLE_QUOTE]: createUnexpected('TAG_OPEN', 'SINGLE_QUOTE'),
+      [ACTIONS.DOUBLE_QUOTE]: createUnexpected('TAG_OPEN', 'DOUBLE_QUOTE'),
       [ACTIONS.EQUAL]: createUnexpected('TAG_OPEN', 'EQUAL'),
       [ACTIONS.QUESTION]: createUnexpected('TAG_OPEN', 'EQUAL'),
       [ACTIONS.BRACE_LEFT]: createUnexpected('TAG_OPEN', 'BRACE_LEFT'),
@@ -285,7 +289,21 @@ export default function tokenize(input: string, traverse: Traverse) {
         text = '';
         state = STATES.ATTRIBUTE_NAME;
       },
-      [ACTIONS.QUOTE](char: string) {
+      [ACTIONS.SINGLE_QUOTE](char: string) {
+        if (!quote) {
+          quote = char;
+          return;
+        }
+        if (quote === char) {
+          traverse(TYPES.ATTRIBUTE_VALUE, text);
+          quote = '';
+          text = '';
+          state = STATES.ATTRIBUTE_NAME;
+          return;
+        }
+        addText(char);
+      },
+      [ACTIONS.DOUBLE_QUOTE](char: string) {
         if (!quote) {
           quote = char;
           return;
@@ -318,6 +336,7 @@ export default function tokenize(input: string, traverse: Traverse) {
           // Side effect!
           text += quote;
           i++;
+          column++
         }
       },
       [ACTIONS.CHAR]: addText,
@@ -328,6 +347,7 @@ export default function tokenize(input: string, traverse: Traverse) {
         if (input[i + 1] === CHAR.MINUS && input[i + 2] === CHAR.GT) {
           // Side effect!
           i += 2;
+          column += 2
           traverse(TYPES.COMMENT, text);
           text = '';
           state = STATES.TEXT;
@@ -340,7 +360,7 @@ export default function tokenize(input: string, traverse: Traverse) {
 
   // start of mustache
   const textLTHandler = stateMachine[STATES.TEXT][ACTIONS.LT];
-  stateMachine[STATES.TEXT][ACTIONS.LT] = function(char) {
+  stateMachine[STATES.TEXT][ACTIONS.LT] = function (char) {
     if (mustache) {
       text += char;
       return;
@@ -362,6 +382,12 @@ export default function tokenize(input: string, traverse: Traverse) {
         : stateHandler[ACTIONS.CHAR];
     if (action) {
       action(char);
+    }
+    if (char === "\n") {
+      line++
+      column = 1
+    } else {
+      column++
     }
     i++;
   }

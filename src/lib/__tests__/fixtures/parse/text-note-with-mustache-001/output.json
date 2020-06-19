@@ -1,0 +1,45 @@
+[
+  {
+    "type": 1,
+    "tagName": "view",
+    "attributes": {
+      "class": "view-class {{someClass || 'otherClass'}}"
+    },
+    "selfClosing": false,
+    "childNodes": [
+      {
+        "type": 3,
+        "textContent": "\n  "
+      },
+      {
+        "type": 1,
+        "tagName": "text",
+        "attributes": {},
+        "selfClosing": false,
+        "childNodes": [
+          {
+            "type": 3,
+            "textContent": "{{a<=b?c:d}}"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "textContent": "\n  "
+      },
+      {
+        "type": 1,
+        "tagName": "include",
+        "attributes": {
+          "src": "../some-template.wxml"
+        },
+        "selfClosing": true,
+        "childNodes": []
+      },
+      {
+        "type": 3,
+        "textContent": "\n"
+      }
+    ]
+  }
+]

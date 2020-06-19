@@ -3,9 +3,9 @@
  * @author vivaxy
  */
 import BaseNode from '../nodes/base';
+import CommentNode from '../nodes/comment';
 import ElementNode from '../nodes/element';
 import TextNode from '../nodes/text';
-import CommentNode from '../nodes/comment';
 import tokenize, { TYPES } from './parse/tokenize';
 
 export default function parse(input: string) {
@@ -65,7 +65,7 @@ export default function parse(input: string) {
       attributeName = attrName;
     },
     [TYPES.ATTRIBUTE_VALUE](attrValue: string) {
-      (node as ElementNode).attributes[attributeName] = attrValue;
+      (node as ElementNode).attributes[attributeName] = attrValue.replace(/"/g, "'");
       attributeName = '';
     },
     [TYPES.COMMENT](comment: string) {
