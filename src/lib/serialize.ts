@@ -22,7 +22,7 @@ const serializeByType = {
         if (node.attributes[name] === true) {
           return name;
         }
-        return `${name}="${node.attributes[name]}"`;
+        return `${name}="${(node.attributes[name] as string).replace(/\"/g, "'")}"`;
       })
       .join(' ');
     if (attrsString) {
