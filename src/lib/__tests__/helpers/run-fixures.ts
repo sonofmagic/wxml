@@ -31,8 +31,9 @@ export default async (
     try {
       inputUniqueKey = await runTest(testCaseBaseDir, testCases[i])
     } catch (e) {
+      const err = e as Error
       console.error(
-        'Test case failed: ' + testCases[i] + '\n\terror: ' + e.stack
+        'Test case failed: ' + testCases[i] + '\n\terror: ' + err.stack
       )
       throw e
     }

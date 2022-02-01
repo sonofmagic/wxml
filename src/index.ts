@@ -1,12 +1,13 @@
 import parse from './lib/parse'
 import _traverse from './lib/traverse'
+import type { Visitor } from './lib/traverse'
 import _serialize from './lib/serialize'
 import NODE_TYPES from './types/node-types'
 import BaseNode from './nodes/base'
 
 export { parse, NODE_TYPES }
 
-export function serialize (node: BaseNode) {
+export function serialize (node: BaseNode | BaseNode[]) {
   if (Array.isArray(node)) {
     return node
       .map((n) => {
@@ -17,7 +18,7 @@ export function serialize (node: BaseNode) {
   return _serialize(node)
 }
 
-export function traverse (node: BaseNode, visitor: Function) {
+export function traverse (node: BaseNode | BaseNode[], visitor: Visitor) {
   if (Array.isArray(node)) {
     node.forEach((n) => {
       _traverse(n, visitor)

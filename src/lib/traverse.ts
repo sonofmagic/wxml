@@ -2,10 +2,12 @@ import BaseNode from '../nodes/base'
 import ElementNode from '../nodes/element'
 import NODE_TYPES from '../types/node-types'
 
+export type Visitor = (node: BaseNode, parent: BaseNode | null) => void;
+
 const NOOP = function () {}
 const traverseByType = {
   [NODE_TYPES.TEXT]: NOOP,
-  [NODE_TYPES.ELEMENT] (node: ElementNode, visitor: Function) {
+  [NODE_TYPES.ELEMENT] (node: ElementNode, visitor: Visitor) {
     node.childNodes.forEach((childNode) => {
       traverse(childNode, visitor, node)
     })
@@ -16,13 +18,13 @@ const traverseByType = {
 
 export default function traverse (
   node: BaseNode,
-  visitor: Function,
+  visitor: Visitor,
   parent: BaseNode | null = null
 ) {
   visitor(node, parent)
   if (!traverseByType[node.type]) {
     throw new Error('Unexpected node.type: ' + node.type)
   }
-  // @ts-ignore
-  traverseByType[node.type](node, visitor)
+
+  traverseByType[node.type](node as ElementNode, visitor)
 }
