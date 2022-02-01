@@ -1,7 +1,3 @@
-/**
- * @since 2019-12-11 08:34
- * @author vivaxy
- */
 export enum TYPES {
   TEXT,
   COMMENT,
@@ -25,7 +21,7 @@ interface Traverse {
   (type: TYPES.COMMENT, value: string): void;
 }
 
-export default function tokenize(input: string, traverse: Traverse) {
+export default function tokenize (input: string, traverse: Traverse) {
   enum CHAR {
     LT = '<',
     GT = '>',
@@ -47,30 +43,30 @@ export default function tokenize(input: string, traverse: Traverse) {
     // end of mustache
   }
   enum ACTIONS {
-    SPACE = "ACTIONS(SPACE)",
-    LT = "ACTIONS(LT)",
-    GT = "ACTIONS(GT)",
-    DOUBLE_QUOTE = "ACTIONS(DOUBLE_QUOTE)",
-    SINGLE_QUOTE = "ACTIONS(SINGLE_QUOTE)",
-    EQUAL = "ACTIONS(EQUAL)",
-    SLASH = "ACTIONS(SLASH)",
-    EXCLAMATION = "ACTIONS(EXCLAMATION)",
-    QUESTION = "ACTIONS(QUESTION)",
-    CHAR = "ACTIONS(CHAR)",
-    MINUS = "ACTIONS(MINUS)",
-    BACK_SLASH = "ACTIONS(BACK_SLASH)",
+    SPACE = 'ACTIONS(SPACE)',
+    LT = 'ACTIONS(LT)',
+    GT = 'ACTIONS(GT)',
+    DOUBLE_QUOTE = 'ACTIONS(DOUBLE_QUOTE)',
+    SINGLE_QUOTE = 'ACTIONS(SINGLE_QUOTE)',
+    EQUAL = 'ACTIONS(EQUAL)',
+    SLASH = 'ACTIONS(SLASH)',
+    EXCLAMATION = 'ACTIONS(EXCLAMATION)',
+    QUESTION = 'ACTIONS(QUESTION)',
+    CHAR = 'ACTIONS(CHAR)',
+    MINUS = 'ACTIONS(MINUS)',
+    BACK_SLASH = 'ACTIONS(BACK_SLASH)',
     // start of mustache
-    BRACE_LEFT = "ACTIONS(BRACE_LEFT)",
-    BRACE_RIGHT = "ACTIONS(BRACE_RIGHT)",
+    BRACE_LEFT = 'ACTIONS(BRACE_LEFT)',
+    BRACE_RIGHT = 'ACTIONS(BRACE_RIGHT)',
     // end of mustache
   }
   enum STATES {
-    TEXT = "STATE(TEXT)",
-    TAG_OPEN = "STATE(TAG_OPEN)",
-    TAG_NAME = "STATE(TAG_NAME)",
-    ATTRIBUTE_NAME = "STATE(ATTRIBUTE_NAME)",
-    ATTRIBUTE_VALUE = "STATE(ATTRIBUTE_VALUE)",
-    COMMENT = "STATE(COMMENT)",
+    TEXT = 'STATE(TEXT)',
+    TAG_OPEN = 'STATE(TAG_OPEN)',
+    TAG_NAME = 'STATE(TAG_NAME)',
+    ATTRIBUTE_NAME = 'STATE(ATTRIBUTE_NAME)',
+    ATTRIBUTE_VALUE = 'STATE(ATTRIBUTE_VALUE)',
+    COMMENT = 'STATE(COMMENT)',
   }
   const CHAR_TO_ACTIONS = {
     [CHAR.SPACE]: ACTIONS.SPACE,
@@ -89,91 +85,95 @@ export default function tokenize(input: string, traverse: Traverse) {
     [CHAR.BACK_SLASH]: ACTIONS.BACK_SLASH,
     // start of mustache
     [CHAR.BRACE_LEFT]: ACTIONS.BRACE_LEFT,
-    [CHAR.BRACE_RIGHT]: ACTIONS.BRACE_RIGHT,
+    [CHAR.BRACE_RIGHT]: ACTIONS.BRACE_RIGHT
     // end of mustache
-  };
+  }
 
-  let state: STATES = STATES.TEXT;
-  let text: string = '';
-  let selfClosing: boolean = false;
-  let closing: boolean = true;
-  let quote: string = '';
-  let i: number = 0;
+  let state: STATES = STATES.TEXT
+  let text: string = ''
+  let selfClosing: boolean = false
+  let closing: boolean = true
+  let quote: string = ''
+  let i: number = 0
   let line: number = 1
   let column: number = 1
   // start of mustache
-  let mustache: boolean = false;
+  let mustache: boolean = false
   // end of mustache
 
-  function NOOP() { }
+  function NOOP () {}
 
-  function createUnexpected(state: string, action: string) {
-    return function unexpected(char: string) {
+  function createUnexpected (state: string, action: string) {
+    return function unexpected (char: string) {
       throw new Error(
         'Unexpected char `' +
-        char +
-        '` in state `' +
-        state +
-        '` with action `' +
-        action +
-        '`' + "line:" + line + ",column:" + column
-      );
-    };
+          char +
+          '` in state `' +
+          state +
+          '` with action `' +
+          action +
+          '`' +
+          'line:' +
+          line +
+          ',column:' +
+          column
+      )
+    }
   }
 
-  function addText(char: string) {
-    text += char;
+  function addText (char: string) {
+    text += char
   }
 
-  function ensureEmptyText() {
+  function ensureEmptyText () {
     if (text) {
-      throw new Error('Unexpected text: ' + text);
+      throw new Error('Unexpected text: ' + text)
     }
   }
 
   const stateMachine = {
     [STATES.TEXT]: {
-      [ACTIONS.LT](char: string) {
-        const nextChar = input[i + 1];
+      [ACTIONS.LT] (char: string) {
+        const nextChar = input[i + 1]
         if (nextChar === CHAR.LT || nextChar === CHAR.GT) {
-          text += char;
-          return;
+          text += char
+          return
         }
         if (text) {
-          traverse(TYPES.TEXT, text);
-          text = '';
+          traverse(TYPES.TEXT, text)
+          text = ''
         }
-        state = STATES.TAG_OPEN;
+        state = STATES.TAG_OPEN
       },
-      [ACTIONS.CHAR](char: string) {
-        addText(char);
+      [ACTIONS.CHAR] (char: string) {
+        addText(char)
         if (i === input.length - 1) {
           // the end
-          traverse(TYPES.TEXT, text);
-          text = '';
+          traverse(TYPES.TEXT, text)
+          text = ''
         }
       },
       // start of mustache
-      [ACTIONS.BRACE_LEFT](char: string) {
+      [ACTIONS.BRACE_LEFT] (char: string) {
         if (input[i + 1] === CHAR.BRACE_LEFT) {
-          mustache = true;
-          text += char + char;
+          mustache = true
+          text += char + char
           // Side effect!
-          i++;
-          return;
+          i++
+          return
         }
-        text += char;
+        text += char
       },
-      [ACTIONS.BRACE_RIGHT](char: string) {
+      [ACTIONS.BRACE_RIGHT] (char: string) {
         if (input[i + 1] === CHAR.BRACE_RIGHT) {
-          mustache = false;
-          text += char + char;
+          mustache = false
+          text += char + char
           // Side effect!
-          i++;
-          return;
+          i++
+          return
         }
-        text += char;
-      },
+        text += char
+      }
       // end of mustache
     },
     [STATES.TAG_OPEN]: {
@@ -186,209 +186,209 @@ export default function tokenize(input: string, traverse: Traverse) {
       [ACTIONS.QUESTION]: createUnexpected('TAG_OPEN', 'EQUAL'),
       [ACTIONS.BRACE_LEFT]: createUnexpected('TAG_OPEN', 'BRACE_LEFT'),
       [ACTIONS.BRACE_RIGHT]: createUnexpected('TAG_OPEN', 'BRACE_RIGHT'),
-      [ACTIONS.CHAR](char: string) {
-        closing = false;
-        state = STATES.TAG_NAME;
-        ensureEmptyText();
-        text += char;
+      [ACTIONS.CHAR] (char: string) {
+        closing = false
+        state = STATES.TAG_NAME
+        ensureEmptyText()
+        text += char
       },
-      [ACTIONS.SLASH]() {
-        closing = true;
-        state = STATES.TAG_NAME;
+      [ACTIONS.SLASH] () {
+        closing = true
+        state = STATES.TAG_NAME
       },
-      [ACTIONS.EXCLAMATION](char: string) {
+      [ACTIONS.EXCLAMATION] (char: string) {
         if (input[i + 1] === CHAR.MINUS && input[i + 2] === CHAR.MINUS) {
-          state = STATES.COMMENT;
+          state = STATES.COMMENT
           // Side effect!
-          i += 2;
-          return;
+          i += 2
+          return
         }
-        createUnexpected('TAG_OPEN', 'EXCLAMATION')(char);
-      },
+        createUnexpected('TAG_OPEN', 'EXCLAMATION')(char)
+      }
     },
     [STATES.TAG_NAME]: {
-      [ACTIONS.SPACE]() {
+      [ACTIONS.SPACE] () {
         if (!text) {
           // `< div`
-          return;
+          return
         }
         // end of a tagName
-        traverse(TYPES.TAG_OPEN, text, closing);
-        text = '';
-        state = STATES.ATTRIBUTE_NAME;
+        traverse(TYPES.TAG_OPEN, text, closing)
+        text = ''
+        state = STATES.ATTRIBUTE_NAME
       },
-      [ACTIONS.GT]() {
+      [ACTIONS.GT] () {
         // end of a tag
-        traverse(TYPES.TAG_OPEN, text, closing);
-        text = '';
-        traverse(TYPES.TAG_CLOSE, closing, selfClosing);
-        closing = false;
-        selfClosing = false;
-        state = STATES.TEXT;
+        traverse(TYPES.TAG_OPEN, text, closing)
+        text = ''
+        traverse(TYPES.TAG_CLOSE, closing, selfClosing)
+        closing = false
+        selfClosing = false
+        state = STATES.TEXT
       },
-      [ACTIONS.SLASH](char: string) {
+      [ACTIONS.SLASH] (char: string) {
         if (input[i + 1] === CHAR.GT) {
-          selfClosing = true;
-          return;
+          selfClosing = true
+          return
         }
-        createUnexpected('TAG_NAME', 'SLASH')(char);
+        createUnexpected('TAG_NAME', 'SLASH')(char)
       },
-      [ACTIONS.CHAR]: addText,
+      [ACTIONS.CHAR]: addText
     },
     [STATES.ATTRIBUTE_NAME]: {
-      [ACTIONS.SPACE]() {
+      [ACTIONS.SPACE] () {
         if (text) {
           // `<div id `
-          traverse(TYPES.ATTRIBUTE_NAME, text);
-          text = '';
+          traverse(TYPES.ATTRIBUTE_NAME, text)
+          text = ''
         }
         // `<div  `
       },
-      [ACTIONS.EQUAL]() {
+      [ACTIONS.EQUAL] () {
         if (text) {
           // `<div id=`
-          traverse(TYPES.ATTRIBUTE_NAME, text);
-          text = '';
+          traverse(TYPES.ATTRIBUTE_NAME, text)
+          text = ''
         }
         // `<div id =`
-        state = STATES.ATTRIBUTE_VALUE;
+        state = STATES.ATTRIBUTE_VALUE
       },
-      [ACTIONS.SLASH](char: string) {
+      [ACTIONS.SLASH] (char: string) {
         if (input[i + 1] === CHAR.GT) {
           // `<div />`
-          selfClosing = true;
-          return;
+          selfClosing = true
+          return
         }
         // `<div / ` or `<div /i`
-        createUnexpected('ATTRIBUTE_NAME', 'SLASH')(char);
+        createUnexpected('ATTRIBUTE_NAME', 'SLASH')(char)
       },
-      [ACTIONS.GT]() {
+      [ACTIONS.GT] () {
         if (text) {
           // `<div id>`
-          traverse(TYPES.ATTRIBUTE_NAME, text);
-          text = '';
+          traverse(TYPES.ATTRIBUTE_NAME, text)
+          text = ''
         }
         // `<div id >`
-        traverse(TYPES.TAG_CLOSE, closing, selfClosing);
-        selfClosing = false;
-        state = STATES.TEXT;
+        traverse(TYPES.TAG_CLOSE, closing, selfClosing)
+        selfClosing = false
+        state = STATES.TEXT
       },
-      [ACTIONS.CHAR]: addText,
+      [ACTIONS.CHAR]: addText
     },
     [STATES.ATTRIBUTE_VALUE]: {
-      [ACTIONS.SPACE](char: string) {
+      [ACTIONS.SPACE] (char: string) {
         if (quote) {
-          addText(char);
-          return;
+          addText(char)
+          return
         }
         if (!text) {
           // `<div id= ` or `<div id  `
-          return;
+          return
         }
-        traverse(TYPES.ATTRIBUTE_VALUE, text);
-        text = '';
-        state = STATES.ATTRIBUTE_NAME;
+        traverse(TYPES.ATTRIBUTE_VALUE, text)
+        text = ''
+        state = STATES.ATTRIBUTE_NAME
       },
-      [ACTIONS.SINGLE_QUOTE](char: string) {
+      [ACTIONS.SINGLE_QUOTE] (char: string) {
         if (!quote) {
-          quote = char;
-          return;
+          quote = char
+          return
         }
         if (quote === char) {
-          traverse(TYPES.ATTRIBUTE_VALUE, text);
-          quote = '';
-          text = '';
-          state = STATES.ATTRIBUTE_NAME;
-          return;
+          traverse(TYPES.ATTRIBUTE_VALUE, text)
+          quote = ''
+          text = ''
+          state = STATES.ATTRIBUTE_NAME
+          return
         }
-        addText(char);
+        addText(char)
       },
-      [ACTIONS.DOUBLE_QUOTE](char: string) {
+      [ACTIONS.DOUBLE_QUOTE] (char: string) {
         if (!quote) {
-          quote = char;
-          return;
+          quote = char
+          return
         }
         if (quote === char) {
-          traverse(TYPES.ATTRIBUTE_VALUE, text);
-          quote = '';
-          text = '';
-          state = STATES.ATTRIBUTE_NAME;
-          return;
+          traverse(TYPES.ATTRIBUTE_VALUE, text)
+          quote = ''
+          text = ''
+          state = STATES.ATTRIBUTE_NAME
+          return
         }
-        addText(char);
+        addText(char)
       },
-      [ACTIONS.GT](char: string) {
+      [ACTIONS.GT] (char: string) {
         if (quote) {
-          addText(char);
-          return;
+          addText(char)
+          return
         }
         // end of a attribute value
-        traverse(TYPES.ATTRIBUTE_VALUE, text);
-        text = '';
-        traverse(TYPES.TAG_CLOSE, closing, selfClosing);
-        closing = false;
-        selfClosing = false;
-        state = STATES.TEXT;
+        traverse(TYPES.ATTRIBUTE_VALUE, text)
+        text = ''
+        traverse(TYPES.TAG_CLOSE, closing, selfClosing)
+        closing = false
+        selfClosing = false
+        state = STATES.TEXT
       },
-      [ACTIONS.BACK_SLASH]() {
+      [ACTIONS.BACK_SLASH] () {
         if (quote && input[i + 1] === quote) {
           // in quote back slash means to escape next char
           // Side effect!
-          text += quote;
-          i++;
+          text += quote
+          i++
           column++
         }
       },
-      [ACTIONS.CHAR]: addText,
+      [ACTIONS.CHAR]: addText
     },
     [STATES.COMMENT]: {
       [ACTIONS.CHAR]: addText,
-      [ACTIONS.MINUS](char: string) {
+      [ACTIONS.MINUS] (char: string) {
         if (input[i + 1] === CHAR.MINUS && input[i + 2] === CHAR.GT) {
           // Side effect!
-          i += 2;
+          i += 2
           column += 2
-          traverse(TYPES.COMMENT, text);
-          text = '';
-          state = STATES.TEXT;
-          return;
+          traverse(TYPES.COMMENT, text)
+          text = ''
+          state = STATES.TEXT
+          return
         }
-        addText(char);
-      },
-    },
-  };
+        addText(char)
+      }
+    }
+  }
 
   // start of mustache
-  const textLTHandler = stateMachine[STATES.TEXT][ACTIONS.LT];
+  const textLTHandler = stateMachine[STATES.TEXT][ACTIONS.LT]
   stateMachine[STATES.TEXT][ACTIONS.LT] = function (char) {
     if (mustache) {
-      text += char;
-      return;
+      text += char
+      return
     }
-    textLTHandler(char);
-  };
+    textLTHandler(char)
+  }
   // end of mustache
 
   while (i < input.length) {
-    const char = input[i];
-    const stateHandler = stateMachine[state];
+    const char = input[i]
+    const stateHandler = stateMachine[state]
     const actionType =
       char in CHAR_TO_ACTIONS
         ? CHAR_TO_ACTIONS[char as keyof typeof CHAR_TO_ACTIONS]
-        : ACTIONS.CHAR;
+        : ACTIONS.CHAR
     const action =
       actionType in stateHandler
         ? stateHandler[actionType as keyof typeof stateHandler]
-        : stateHandler[ACTIONS.CHAR];
+        : stateHandler[ACTIONS.CHAR]
     if (action) {
-      action(char);
+      action(char)
     }
-    if (char === "\n") {
+    if (char === '\n') {
       line++
       column = 1
     } else {
       column++
     }
-    i++;
+    i++
   }
 }
