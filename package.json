@@ -1,6 +1,6 @@
 {
   "name": "@icebreakers/wxml",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "wxml parser and serializer. fork form wxml and improve. thanks to vivaxy and roadupcc",
   "keywords": [
     "wxml",
@@ -26,6 +26,9 @@
     "release:beta": "npm run build && npm run coverage && standard-version --prerelease beta && npm publish --tag beta && git push --follow-tags",
     "release": "npm run build && npm run coverage && standard-version && npm publish && git push --follow-tags"
   },
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sonofmagic/wxml.git"
@@ -39,16 +42,16 @@
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^27.4.0",
-    "@typescript-eslint/eslint-plugin": "^5.10.2",
-    "@typescript-eslint/parser": "^5.10.2",
-    "eslint": "7.12.1",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "eslint": "8.9.0",
     "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jest": "^26.0.0",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-promise": "6.0.0",
     "fs-extra": "^10.0.0",
-    "jest": "^27.4.7",
+    "jest": "^27.5.1",
     "prettier": "^2.5.1",
     "standard-version": "^9.3.2",
     "ts-jest": "^27.1.3",
