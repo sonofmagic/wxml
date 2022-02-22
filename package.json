@@ -1,7 +1,7 @@
 {
-  "name": "wxml",
-  "version": "2.2.2",
-  "description": "wxml parser and serializer.",
+  "name": "@icebreakers/wxml",
+  "version": "1.0.1",
+  "description": "wxml parser and serializer. fork form wxml and improve. thanks to vivaxy and roadupcc",
   "keywords": [
     "wxml",
     "wxml-parser",
@@ -26,38 +26,40 @@
     "release:beta": "npm run build && npm run coverage && standard-version --prerelease beta && npm publish --tag beta && git push --follow-tags",
     "release": "npm run build && npm run coverage && standard-version && npm publish && git push --follow-tags"
   },
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oft/wxml.git"
+    "url": "git+https://github.com/sonofmagic/wxml.git"
   },
-  "author": "roadup <roadup.inbox@gmail.com>",
+  "author": "SonOfMagic <qq1324318532@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/oft/wxml/issues"
+    "url": "https://github.com/sonofmagic/wxml/issues"
   },
-  "homepage": "https://github.com/oft/wxml#readme",
+  "homepage": "https://github.com/sonofmagic/wxml#readme",
   "devDependencies": {
-    "@types/fs-extra": "^9.0.0",
-    "@types/jest": "^25.0.0",
-    "fs-extra": "^9.0.0",
-    "husky": "^4.0.0",
-    "jest": "^26.0.1",
-    "lint-staged": "^10.0.0",
-    "prettier": "^2.0.0",
-    "standard-version": "^8.0.0",
-    "ts-jest": "^26.0.0",
-    "typescript": "^3.9.2"
+    "@types/fs-extra": "^9.0.13",
+    "@types/jest": "^27.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "eslint": "8.9.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-jest": "^26.1.1",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "6.0.0",
+    "fs-extra": "^10.0.0",
+    "jest": "^27.5.1",
+    "prettier": "^2.5.1",
+    "standard-version": "^9.3.2",
+    "ts-jest": "^27.1.3",
+    "typescript": "^4.5.5"
   },
-  "lint-staged": {
-    "**/**.{js,json,md}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "jest": {
     "testEnvironment": "node",

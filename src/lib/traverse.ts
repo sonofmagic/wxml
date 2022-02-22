@@ -1,32 +1,30 @@
-/**
- * @since 2018-09-08 13:03:56
- * @author vivaxy
- */
-import BaseNode from '../nodes/base';
-import ElementNode from '../nodes/element';
-import NODE_TYPES from '../types/node-types';
+import BaseNode from '../nodes/base'
+import ElementNode from '../nodes/element'
+import NODE_TYPES from '../types/node-types'
 
-const NOOP = function() {};
+export type Visitor = (node: BaseNode, parent: BaseNode | null) => void;
+
+const NOOP = function () {}
 const traverseByType = {
   [NODE_TYPES.TEXT]: NOOP,
-  [NODE_TYPES.ELEMENT](node: ElementNode, visitor: Function) {
+  [NODE_TYPES.ELEMENT] (node: ElementNode, visitor: Visitor) {
     node.childNodes.forEach((childNode) => {
-      traverse(childNode, visitor, node);
-    });
+      traverse(childNode, visitor, node)
+    })
   },
-  [NODE_TYPES.COMMENT]: NOOP,
+  [NODE_TYPES.COMMENT]: NOOP
   // [NODE_TYPES.CDATA_SECTION]: NOOP,
-};
+}
 
-export default function traverse(
+export default function traverse (
   node: BaseNode,
-  visitor: Function,
+  visitor: Visitor,
   parent: BaseNode | null = null
 ) {
-  visitor(node, parent);
+  visitor(node, parent)
   if (!traverseByType[node.type]) {
-    throw new Error('Unexpected node.type: ' + node.type);
+    throw new Error('Unexpected node.type: ' + node.type)
   }
-  // @ts-ignore
-  traverseByType[node.type](node, visitor);
+
+  traverseByType[node.type](node as ElementNode, visitor)
 }
