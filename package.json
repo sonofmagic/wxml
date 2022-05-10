@@ -1,6 +1,6 @@
 {
   "name": "@icebreakers/wxml",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "wxml parser and serializer. fork form wxml and improve. thanks to vivaxy and roadupcc",
   "keywords": [
     "wxml",
