@@ -4,13 +4,13 @@ import CommentNode from './comment'
 import NODE_TYPES from '../types/node-types'
 
 export default class ElementNode extends BaseNode {
-  public tagName: string;
+  public tagName: string
   public attributes: {
     [attrName: string]: string | true;
-  };
+  }
 
-  public childNodes: Array<ElementNode | TextNode | CommentNode>;
-  public selfClosing: boolean;
+  public childNodes: Array<ElementNode | TextNode | CommentNode>
+  public selfClosing: boolean
 
   constructor () {
     super(NODE_TYPES.ELEMENT)

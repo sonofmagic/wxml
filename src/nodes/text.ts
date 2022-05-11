@@ -2,7 +2,7 @@ import BaseNode from './base'
 import NODE_TYPES from '../types/node-types'
 
 export default class TextNode extends BaseNode {
-  public textContent: string;
+  public textContent: string
 
   constructor (text: string) {
     super(NODE_TYPES.TEXT)

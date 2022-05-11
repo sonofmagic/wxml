@@ -36,3 +36,12 @@ test('parse', async function () {
     todoTestCaseNames
   )
 })
+
+test('parse with inline-wxs-module', async function () {
+  const input = await fse.readFile(
+    path.join(__dirname, 'fixtures', 'parse', 'inline-wxs-module-000', 'input.wxml'),
+    'utf8'
+  )
+  const actual = parse(input)// .map((node) => node.toJSON())
+  expect(actual).toBe(true)
+})

@@ -2,7 +2,7 @@ import BaseNode from './base'
 import NODE_TYPES from '../types/node-types'
 
 export default class CommentNode extends BaseNode {
-  public comment: string;
+  public comment: string
 
   constructor (comment: string) {
     super(NODE_TYPES.COMMENT)
